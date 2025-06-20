@@ -57,7 +57,13 @@ class JournalRAG:
         conn.close()
     
     def _parse_journal_files(self) -> List[Dict]:
-        """Parse journal files and extract entries with dates"""
+        """
+        Collects and parses journal entries from text files.
+
+        Extracts date information from filenames or content and returns a list of
+        dictionaries, each containing the filename, date, content, and file path
+        of a journal entry.
+        """
         entries = []
         
         for file_path in self.journal_dir.glob("*.txt"):
