@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12
 """
 Journal RAG System using Ollama
 A local RAG system for querying personal journal files organized by day
@@ -29,7 +29,7 @@ class JournalRAG:
             embedding_model: SentenceTransformer model for embeddings
             ollama_model: Ollama model name for generation
         """
-        self.journal_dir = Path(diary_dir)
+        self.journal_dir = Path(journal_dir)
         self.db_path = db_path
         self.embedding_model = SentenceTransformer(embedding_model)
         self.ollama_model = ollama_model
@@ -271,7 +271,7 @@ def main():
         return
     
     # Initialize RAG system
-    rag = JournalRAG(args.diary_dir, ollama_model=args.model)
+    rag = JournalRAG(args.journal_dir, ollama_model=args.model)
     
     if args.build or args.rebuild:
         rag.build_index(force_rebuild=args.rebuild)
@@ -300,4 +300,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
