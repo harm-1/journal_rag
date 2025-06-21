@@ -67,7 +67,7 @@ First, create an embedding index of your diary files:
 diary-rag /path/to/your/diary/files --build
 
 # Or directly with Python
-python src/diary_rag/main.py /path/to/your/diary/files --build
+python main.py /path/to/your/diary/files --build
 ```
 
 #### 2. Query Your Diary
@@ -274,7 +274,7 @@ diary-rag/
 2. Create a feature branch
 3. Make your changes
 4. Add tests
-5. Run linting: `poetry run black src/ && poetry run flake8 src/`
+5. Run linting: `poetry run black . && poetry run flake8 .`
 6. Submit a pull request
 
 ## License
