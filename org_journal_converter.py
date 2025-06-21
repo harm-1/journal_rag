@@ -38,10 +38,10 @@ class OrgJournalToRoamConverter:
             Formatted date string (e.g., '2021-06-04')
         """
         # Remove extension if present
-        base_name = filename.split('.')[0]
+        base_name = filename.split(".")[0]
 
         # Check if it matches YYYYMMDD pattern
-        if re.match(r'^\d{8}$', base_name):
+        if re.match(r"^\d{8}$", base_name):
             year = base_name[:4]
             month = base_name[4:6]
             day = base_name[6:8]
@@ -59,7 +59,7 @@ class OrgJournalToRoamConverter:
         Returns:
             Tuple of (date_header, list of (time, content) entries)
         """
-        lines = content.strip().split('\n')
+        lines = content.strip().split("\n")
         date_header = ""
         entries = []
         current_time = ""
@@ -67,14 +67,14 @@ class OrgJournalToRoamConverter:
 
         for line in lines:
             # Check for main date header (e.g., "* vrijdag, 04-06-21")
-            if line.startswith('* ') and not re.match(r'^\*\* \d{2}:\d{2}', line):
+            if line.startswith("* ") and not re.match(r"^\*\* \d{2}:\d{2}", line):
                 date_header = line[2:].strip()  # Remove "* "
 
             # Check for time entry (e.g., "** 09:22")
-            elif line.startswith('** ') and re.match(r'^\*\* \d{2}:\d{2}', line):
+            elif line.startswith("** ") and re.match(r"^\*\* \d{2}:\d{2}", line):
                 # Save previous entry if exists
                 if current_time and current_content:
-                    entries.append((current_time, '\n'.join(current_content).strip()))
+                    entries.append((current_time, "\n".join(current_content).strip()))
 
                 # Start new entry
                 current_time = line[3:].strip()  # Remove "** "
@@ -86,7 +86,7 @@ class OrgJournalToRoamConverter:
 
         # Don't forget the last entry
         if current_time and current_content:
-            entries.append((current_time, '\n'.join(current_content).strip()))
+            entries.append((current_time, "\n".join(current_content).strip()))
 
         return date_header, entries
 
@@ -115,7 +115,7 @@ class OrgJournalToRoamConverter:
             content += f"* {time}\n"
             if entry_content:
                 # Indent content properly
-                indented_content = '\n'.join(entry_content.split('\n'))
+                indented_content = "\n".join(entry_content.split("\n"))
                 content += f"{indented_content}\n"
             content += "\n"
 
@@ -134,7 +134,7 @@ class OrgJournalToRoamConverter:
         if roam_file_path.exists():
             print(f"WARNING: {roam_file_path.name} already exists in org-roam-dailies")
             response = input("Overwrite? (y/N): ").strip().lower()
-            return response in ['y', 'yes']
+            return response in ["y", "yes"]
         return True
 
     def convert_file(self, journal_filename: str, dry_run: bool = False) -> bool:
@@ -166,7 +166,7 @@ class OrgJournalToRoamConverter:
                 return True
 
             # Read and parse journal content
-            with open(journal_path, 'r', encoding='utf-8') as f:
+            with open(journal_path, "r", encoding="utf-8") as f:
                 content = f.read()
 
             date_header, entries = self._parse_journal_content(content)
@@ -179,13 +179,13 @@ class OrgJournalToRoamConverter:
                 print(f"  Date header: {date_header}")
                 print(f"  Entries: {len(entries)}")
                 print(f"  Preview:")
-                print("  " + "\n  ".join(roam_content.split('\n')[:10]))
-                if len(roam_content.split('\n')) > 10:
+                print("  " + "\n  ".join(roam_content.split("\n")[:10]))
+                if len(roam_content.split("\n")) > 10:
                     print("  ...")
                 print()
             else:
                 # Write org-roam file
-                with open(roam_path, 'w', encoding='utf-8') as f:
+                with open(roam_path, "w", encoding="utf-8") as f:
                     f.write(roam_content)
 
                 print(f"Converted: {journal_filename} -> {roam_filename}")
@@ -214,7 +214,7 @@ class OrgJournalToRoamConverter:
             if file_path.is_file():
                 # Check if filename matches YYYYMMDD pattern
                 base_name = file_path.stem
-                if re.match(r'^\d{8}$', base_name):
+                if re.match(r"^\d{8}$", base_name):
                     journal_files.append(file_path.name)
 
         journal_files.sort()
@@ -243,7 +243,7 @@ class OrgJournalToRoamConverter:
         for file_path in self.journal_dir.iterdir():
             if file_path.is_file():
                 base_name = file_path.stem
-                if re.match(r'^\d{8}$', base_name):
+                if re.match(r"^\d{8}$", base_name):
                     try:
                         roam_date = self._parse_journal_filename(file_path.name)
                         journal_files.append(f"{file_path.name} -> {roam_date}.org")
@@ -254,15 +254,29 @@ class OrgJournalToRoamConverter:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Convert org-journal files to org-roam-dailies format")
-    parser.add_argument("journal_dir", nargs='?',
-                        help="Directory containing org-journal files",
-                        default="~/org/journal")
-    parser.add_argument("roam_dir", nargs='?',
-                        help="Directory for org-roam-dailies files",
-                        default="~/org/roam/daily")
-    parser.add_argument("--dry-run", action="store_true", help="Show what would be converted without making changes")
-    parser.add_argument("--list", action="store_true", help="List journal files that can be converted")
+    parser = argparse.ArgumentParser(
+        description="Convert org-journal files to org-roam-dailies format"
+    )
+    parser.add_argument(
+        "journal_dir",
+        nargs="?",
+        help="Directory containing org-journal files",
+        default="~/org/journal",
+    )
+    parser.add_argument(
+        "roam_dir",
+        nargs="?",
+        help="Directory for org-roam-dailies files",
+        default="~/org/roam/daily",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Show what would be converted without making changes",
+    )
+    parser.add_argument(
+        "--list", action="store_true", help="List journal files that can be converted"
+    )
     parser.add_argument("--file", type=str, help="Convert specific file only")
 
     args = parser.parse_args()
@@ -272,7 +286,9 @@ def main():
         print(f"ERROR: Journal directory {args.journal_dir} does not exist")
         return 1
 
-    converter = OrgJournalToRoamConverter(journal_dir, os.path.expanduser(args.roam_dir))
+    converter = OrgJournalToRoamConverter(
+        journal_dir, os.path.expanduser(args.roam_dir)
+    )
 
     if args.list:
         files = converter.list_journal_files()
@@ -296,7 +312,7 @@ def main():
     print(f"  Successful: {stats['successful']}")
     print(f"  Failed: {stats['failed']}")
 
-    if not args.dry_run and stats['successful'] > 0:
+    if not args.dry_run and stats["successful"] > 0:
         print("\nIMPORTANT: After conversion, you should:")
         print("1. Run 'M-x org-roam-db-sync' in Emacs to update the org-roam database")
         print("2. Verify the converted files look correct")
