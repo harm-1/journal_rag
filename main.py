@@ -273,7 +273,12 @@ Answer:"""
 
 def main():
     parser = argparse.ArgumentParser(description="Journal RAG System")
-    parser.add_argument("journal_dir", help="Directory containing diary files")
+    parser.add_argument(
+        "journal_dir",
+        help="Directory containing diary files",
+        nargs="?",
+        default="~/org/roam/daily",
+    )
     parser.add_argument(
         "--build", action="store_true", help="Build the embedding index"
     )
