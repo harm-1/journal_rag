@@ -224,7 +224,7 @@ class JournalRAG:
 
     def query(self, question: str, top_k: int = 5) -> str:
         """Query the journal RAG system"""
-        print(f"Searching for relevant journal entries...")
+        print("Searching for relevant journal entries...")
 
         # Find relevant journal chunks
         relevant_chunks = self._similarity_search(question, top_k)
