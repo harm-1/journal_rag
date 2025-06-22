@@ -40,6 +40,22 @@ def extract_date(filename: str, content: str) -> str:
     return "Unknown"
 
 
+def chunk_text(
+    self, text: str, chunk_size: int = 500, overlap: int = 50
+) -> List[str]:
+    """Split text into overlapping chunks"""
+    words = text.split()
+    chunks = []
+
+    for i in range(0, len(words), chunk_size - overlap):
+        chunk = " ".join(words[i : i + chunk_size])
+        chunks.append(chunk)
+
+        if i + chunk_size >= len(words):
+            break
+
+    return chunks
+
 
 class JournalRAG:
     def __init__(
@@ -119,23 +135,6 @@ class JournalRAG:
 
         return entries
 
-
-    def _chunk_text(
-        self, text: str, chunk_size: int = 500, overlap: int = 50
-    ) -> List[str]:
-        """Split text into overlapping chunks"""
-        words = text.split()
-        chunks = []
-
-        for i in range(0, len(words), chunk_size - overlap):
-            chunk = " ".join(words[i : i + chunk_size])
-            chunks.append(chunk)
-
-            if i + chunk_size >= len(words):
-                break
-
-        return chunks
-
     def build_index(self, force_rebuild: bool = False):
         """Build or rebuild the embedding index"""
         conn = sqlite3.connect(self.db_path)
@@ -163,7 +162,7 @@ class JournalRAG:
             print(f"Processing {entry['filename']}...")
 
             # Chunk the content
-            chunks = self._chunk_text(entry["content"])
+            chunks = chunk_text(entry["content"])
 
             for i, chunk in enumerate(chunks):
                 # Generate embedding
