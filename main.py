@@ -16,6 +16,31 @@ import requests
 from sentence_transformers import SentenceTransformer
 
 
+def extract_date(filename: str, content: str) -> str:
+    """Extract date from filename or content"""
+    # Try filename patterns: YYYY-MM-DD, YYYYMMDD, etc.
+    date_patterns = [
+        r"(\d{4}-\d{2}-\d{2})",
+        r"(\d{4}\d{2}\d{2})",
+        r"(\d{2}-\d{2}-\d{4})",
+        r"(\d{2}/\d{2}/\d{4})",
+    ]
+
+    for pattern in date_patterns:
+        match = re.search(pattern, filename)
+        if match:
+            return match.group(1)
+
+    # Try to find date in content
+    for pattern in date_patterns:
+        match = re.search(pattern, content[:200])  # Check first 200 chars
+        if match:
+            return match.group(1)
+
+    return "Unknown"
+
+
+
 class JournalRAG:
     def __init__(
         self,
@@ -78,7 +103,7 @@ class JournalRAG:
                     content = f.read()
 
                 # Try to extract date from filename or content
-                date = self._extract_date(file_path.name, content)
+                date = extract_date(file_path.name, content)
 
                 entries.append(
                     {
@@ -94,28 +119,6 @@ class JournalRAG:
 
         return entries
 
-    def _extract_date(self, filename: str, content: str) -> str:
-        """Extract date from filename or content"""
-        # Try filename patterns: YYYY-MM-DD, YYYYMMDD, etc.
-        date_patterns = [
-            r"(\d{4}-\d{2}-\d{2})",
-            r"(\d{4}\d{2}\d{2})",
-            r"(\d{2}-\d{2}-\d{4})",
-            r"(\d{2}/\d{2}/\d{4})",
-        ]
-
-        for pattern in date_patterns:
-            match = re.search(pattern, filename)
-            if match:
-                return match.group(1)
-
-        # Try to find date in content
-        for pattern in date_patterns:
-            match = re.search(pattern, content[:200])  # Check first 200 chars
-            if match:
-                return match.group(1)
-
-        return "Unknown"
 
     def _chunk_text(
         self, text: str, chunk_size: int = 500, overlap: int = 50
