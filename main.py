@@ -40,9 +40,7 @@ def extract_date(filename: str, content: str) -> str:
     return "Unknown"
 
 
-def chunk_text(
-    self, text: str, chunk_size: int = 500, overlap: int = 50
-) -> List[str]:
+def chunk_text(self, text: str, chunk_size: int = 500, overlap: int = 50) -> List[str]:
     """Split text into overlapping chunks"""
     words = text.split()
     chunks = []
@@ -244,7 +242,9 @@ class JournalRAG:
 
 Question: {question}
 
-Please answer the question based on the journal entries provided above. Be specific and reference the relevant diary entries when possible. If the diary entries don't contain enough information to answer the question, please say so.
+Please answer the question based on the journal entries provided above.
+Be specific and reference the relevant diary entries when possible.
+If the diary entries don't contain enough information to answer the question, please say so.
 
 Answer:"""
 
@@ -283,7 +283,9 @@ def main():
     parser.add_argument("--query", type=str, help="Query the journal system")
     parser.add_argument("--list", action="store_true", help="List all journal entries")
     parser.add_argument("--model", default="llama2", help="Ollama model to use")
-    parser.add_argument("--init-db", action="store_true", help="Initialize database tables")
+    parser.add_argument(
+        "--init-db", action="store_true", help="Initialize database tables"
+    )
 
     args = parser.parse_args()
 
