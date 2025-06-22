@@ -58,9 +58,21 @@ ollama pull mistral       # Alternative option
 
 ### Command Line Interface
 
-#### 1. Build the Index
+#### 1. Initialize the Database (Optional)
 
-First, create an embedding index of your diary files:
+For first-time setup, initialize the database schema:
+
+```bash
+# With Poetry
+diary-rag /path/to/your/diary/files --init-db
+
+# Or directly with Python
+python src/diary_rag/main.py /path/to/your/diary/files --init-db
+```
+
+#### 2. Build the Index
+
+Create an embedding index of your diary files:
 
 ```bash
 # With Poetry
@@ -70,7 +82,7 @@ diary-rag /path/to/your/diary/files --build
 python src/diary_rag/main.py /path/to/your/diary/files --build
 ```
 
-#### 2. Query Your Diary
+#### 3. Query Your Diary
 
 Ask questions about your diary entries:
 
@@ -108,6 +120,9 @@ diary-rag /path/to/diary --query "your question" --model mistral
 
 # Force rebuild the index (if you've added new diary files)
 diary-rag /path/to/diary --rebuild
+
+# Initialize the database (without building the index)
+diary-rag /path/to/diary --init-db
 
 # Get help
 diary-rag --help

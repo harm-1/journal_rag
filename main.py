@@ -80,9 +80,7 @@ class JournalRAG:
         self.ollama_model = ollama_model
         self.ollama_url = "http://localhost:11434/api/generate"
 
-        self._init_database()
-
-    def _init_database(self):
+    def init_database(self):
         """Initialize SQLite database for storing embeddings"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -285,6 +283,7 @@ def main():
     parser.add_argument("--query", type=str, help="Query the journal system")
     parser.add_argument("--list", action="store_true", help="List all journal entries")
     parser.add_argument("--model", default="llama2", help="Ollama model to use")
+    parser.add_argument("--init-db", action="store_true", help="Initialize database tables")
 
     args = parser.parse_args()
 
@@ -294,6 +293,11 @@ def main():
 
     # Initialize RAG system
     rag = JournalRAG(args.journal_dir, ollama_model=args.model)
+
+    if args.init_db:
+        rag.init_database()
+        print("Database initialized successfully")
+        return
 
     if args.build or args.rebuild:
         rag.build_index(force_rebuild=args.rebuild)
