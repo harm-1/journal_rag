@@ -40,7 +40,7 @@ def extract_date(filename: str, content: str) -> str:
     return "Unknown"
 
 
-def chunk_text(self, text: str, chunk_size: int = 500, overlap: int = 50) -> List[str]:
+def chunk_text(text: str, chunk_size: int = 500, overlap: int = 50) -> List[str]:
     """Split text into overlapping chunks"""
     words = text.split()
     chunks = []
@@ -109,7 +109,7 @@ class JournalRAG:
         """
         entries = []
 
-        for file_path in self.journal_dir.glob("*.txt"):
+        for file_path in self.journal_dir.glob("*.org"):
             try:
                 with open(file_path, "r", encoding="utf-8") as f:
                     content = f.read()
