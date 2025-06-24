@@ -294,12 +294,15 @@ def main():
 
     args = parser.parse_args()
 
-    if not os.path.exists(args.journal_dir):
-        print(f"Error: Directory {args.journal_dir} does not exist")
+    # Expand tilde to user's home directory
+    expanded_journal_dir = os.path.expanduser(args.journal_dir)
+
+    if not os.path.exists(expanded_journal_dir):
+        print(f"Error: Directory '{expanded_journal_dir}' does not exist")
         return
 
-    # Initialize RAG system
-    rag = JournalRAG(args.journal_dir, ollama_model=args.model)
+    # Initialize RAG system with expanded path
+    rag = JournalRAG(expanded_journal_dir, ollama_model=args.model)
 
     if args.init_db:
         rag.init_database()
